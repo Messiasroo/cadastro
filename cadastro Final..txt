@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro de Livros</title>
+</head>
+<body>
+    <h1>Cadastro de Livros</h1>
+    <form id="bookForm">
+        <label for="title">Título do Livro:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="author">Autor do Livro:</label><br>
+        <input type="text" id="author" name="author"><br>
+        <label for="edition">Edição do Livro:</label><br>
+        <input type="text" id="edition" name="edition"><br>
+        <label for="year">Ano de Publicação:</label><br>
+        <input type="number" id="year" name="year"><br>
+        <label for="isbn">ISBN:</label><br>
+        <input type="text" id="isbn" name="isbn"><br>
+        <input type="submit" value="Cadastrar Livro">
+    </form>
+    <h2>Livros Cadastrados:</h2>
+    <ul id="bookList"></ul>
+
+    <script>
+        // Define a classe Livro
+        class Livro {
+            constructor(titulo, autor, edicao, ano, isbn) {
+                this.titulo = titulo;
+                this.autor = autor;
+                this.edicao = edicao;
+                this.ano = ano;
+                this.isbn = isbn;
+            }
+        }
+
+        // Função para cadastrar um livro
+        function cadastrarLivro(event) {
+            event.preventDefault();
+
+            // Obtém os valores dos campos do formulário
+            const titulo = document.getElementById('title').value;
+            const autor = document.getElementById('author').value;
+            const edicao = document.getElementById('edition').value;
+            const ano = document.getElementById('year').value;
+            const isbn = document.getElementById('isbn').value;
+
+            // Cria um novo livro e adiciona à lista de livros
+            const livro = new Livro(titulo, autor, edicao, ano, isbn);
+            const livros = JSON.parse(localStorage.getItem('books')) || [];
+            livros.push(livro);
+            localStorage.setItem('books', JSON.stringify(livros));
+
+            // Limpa o formulário e atualiza a lista de livros
+            document.getElementById('bookForm').reset();
+            carregarLivros();
+        }
+
+        // Função para editar um livro
+        function editarLivro(index) {
+            const livros = JSON.parse(localStorage.getItem('books')) || [];
+            const livro = livros[index];
+
+            // Preenche o formulário com os detalhes do livro
+            document.getElementById('title').value = livro.titulo;
+            document.getElementById('author').value = livro.autor;
+            document.getElementById('edition').value = livro.edicao;
+            document.getElementById('year').value = livro.ano;
+            document.getElementById('isbn').value = livro.isbn;
+
+            // Remove o livro da lista de livros
+            livros.splice(index, 1);
+            localStorage.setItem('books', JSON.stringify(livros));
+
+            // Atualiza a lista de livros
+            carregarLivros();
+        }
+
+        // Função para excluir um livro
+        function excluirLivro(index) {
+            const livros = JSON.parse(localStorage.getItem('books')) || [];
+
+            // Remove o livro da lista de livros
+            livros.splice(index, 1);
+            localStorage.setItem('books', JSON.stringify(livros));
+
+            // Atualiza a lista de livros
+            carregarLivros();
+        }
+
+        // Função para carregar os livros cadastrados
+        function carregarLivros() {
+            const livros = JSON.parse(localStorage.getItem('books')) || [];
+            const listaLivros = document.getElementById('bookList');
+            listaLivros.innerHTML = '';
+
+            // Adiciona cada livro à lista de livros
+            for (let i = 0; i < livros.length; i++) {
+                const livro = livros[i];
+                const itemLista = document.createElement('li');
+                itemLista.textContent = `${livro.titulo}, ${livro.autor}, ${livro.edicao}, ${livro.ano}, ${livro.isbn}`;
+
+                // Adiciona o botão "Editar"
+                const botaoEditar = document.createElement('button');
+                botaoEditar.textContent = 'Editar';
+                botaoEditar.onclick = function() { editarLivro(i); };
+                itemLista.appendChild(botaoEditar);
+
+                // Adiciona o botão "Excluir"
+                const botaoExcluir = document.createElement('button');
+                botaoExcluir.textContent = 'Excluir';
+                botaoExcluir.onclick = function() { excluirLivro(i); };
+                itemLista.appendChild(botaoExcluir);
+
+                listaLivros.appendChild(itemLista);
+            }
+        }
+
+        // Adiciona o evento de submit ao formulário
+        document.getElementById('bookForm').addEventListener('submit', cadastrarLivro);
+
+        // Carrega os livros ao carregar a página
+        window.onload = carregarLivros;
+    </script>
+</body>
+</html>

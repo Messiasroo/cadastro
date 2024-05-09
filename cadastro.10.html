@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Livro</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+input[type="text"] {
+    display: block;
+    margin: 0.5em auto;
+    padding: 0.5em;
+    width: 80%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    display: block;
+    margin: 1em auto;
+    padding: 0.5em 1em;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+    </style>
+    <script>
+        class Livro {
+            constructor(titulo, autor, editora, ano_publicacao) {
+                this.titulo = titulo;
+                this.autor = autor;
+                this.editora = editora;
+                this.ano_publicacao = ano_publicacao;
+            }
+        }
+
+        var livros_cadastrados = [];
+
+        function cadastrar_livro() {
+            var titulo = document.getElementById('titulo').value;
+            var autor = document.getElementById('autor').value;
+            var editora = document.getElementById('editora').value;
+            var ano_publicacao = document.getElementById('ano_publicacao').value;
+
+            var novo_livro = new Livro(titulo, autor, editora, ano_publicacao);
+            livros_cadastrados.push(novo_livro);
+            alert("Livro cadastrado com sucesso!");
+        }
+
+        function buscar_por_titulo() {
+            var titulo_busca = document.getElementById('buscar_titulo').value;
+
+            for (var i = 0; i < livros_cadastrados.length; i++) {
+                if (livros_cadastrados[i].titulo.toLowerCase() === titulo_busca.toLowerCase()) {
+                    alert(`Resultado da busca: ${livros_cadastrados[i].titulo} - ${livros_cadastrados[i].autor} - ${livros_cadastrados[i].editora} - ${livros_cadastrados[i].ano_publicacao}`);
+                    return;
+                }
+            }
+            alert("Livro não encontrado.");
+        }
+    </script>
+</head>
+<body>
+    <h1>Cadastro de Livros</h1>
+    <input type="text" id="titulo" placeholder="Digite o título do livro">
+    <input type="text" id="autor" placeholder="Digite o nome do autor">
+    <input type="text" id="editora" placeholder="Digite o nome da editora">
+    <input type="text" id="ano_publicacao" placeholder="Digite o ano de publicação">
+    <button onclick="cadastrar_livro()">Cadastrar livro</button>
+
+    <h1>Buscar Livro</h1>
+    <input type="text" id="buscar_titulo" placeholder="Digite o título do livro que deseja buscar">
+    <button onclick="buscar_por_titulo()">Buscar por título</button>
+</body>
+</html>

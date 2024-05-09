@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro de Livros</title>
+</head>
+<body>
+    <h1>Cadastro de Livros</h1>
+    <form id="bookForm">
+        <label for="title">Título do Livro:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <input type="submit" value="Cadastrar Livro">
+    </form>
+    <h2>Livros Cadastrados:</h2>
+    <ul id="bookList"></ul>
+
+    <script>
+        document.getElementById('bookForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var title = document.getElementById('title').value;
+            var books = JSON.parse(localStorage.getItem('books')) || [];
+            books.push(title);
+            localStorage.setItem('books', JSON.stringify(books));
+            loadBooks();
+            document.getElementById('title').value = '';
+        });
+
+        function loadBooks() {
+            var books = JSON.parse(localStorage.getItem('books')) || [];
+            var bookList = document.getElementById('bookList');
+            bookList.innerHTML = '';
+            for (var i = 0; i < books.length; i++) {
+                var li = document.createElement('li');
+                li.textContent = books[i];
+                bookList.appendChild(li);
+            }
+        }
+
+        loadBooks();
+    </script>
+</body>
+</html>
